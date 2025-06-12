@@ -17,10 +17,7 @@ class _CustomSplashScreenState extends State<CustomSplashScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(Duration(seconds: 3), () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-        );
+        Navigator.of(context).pushReplacementNamed('/home');
       });
     });
   }

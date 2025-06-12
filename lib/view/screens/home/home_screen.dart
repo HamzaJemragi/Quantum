@@ -47,14 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _onMicPressed() {
-    void _onMicPressed() {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => VoiceChatScreen()),
-      );
-      // Reconnaissance vocale possible ici
-    } // Reconnaissance vocale possible ici
-  }
+    Navigator.of(context).pushReplacementNamed('/voice');
+  } // Reconnaissance vocale possible ici
 
   void _showAudioOptions(
     BuildContext context,
