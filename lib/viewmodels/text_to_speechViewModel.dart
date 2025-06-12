@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../core/services/tts_service.dart';
 import '../data/models/text_speech_model.dart';
 
 class AudioViewModel extends ChangeNotifier {
@@ -49,10 +50,19 @@ class AudioViewModel extends ChangeNotifier {
   Future<void> addAudioMessage(String text, String lang) async {
     if (text.trim().isEmpty) return;
 
-    final message = AudioMessage(text: text.trim(), languageCode: lang, );
+    final TtsService ttsService = TtsService();
+    final File? file = await ttsService.getTtsFile(text.trim(), lang);
+
+    final message = AudioMessage(
+      text: text.trim(),
+      languageCode: lang,
+      audioFilePath: file?.path, // <- plus d'erreur ici
+    );
+
     _audioMessages.add(message);
     notifyListeners();
   }
+
 
   Future<void> playAudio(int index) async {
     if (index < 0 || index >= _audioMessages.length) return;
@@ -123,14 +133,21 @@ class AudioViewModel extends ChangeNotifier {
     final msg = _audioMessages[index];
     final filePath = msg.audioFilePath;
 
-    if (filePath != null && File(filePath).existsSync()) {
-      // Partage du fichier audio avec texte
-      await Share.shareFiles([filePath], text: msg.text, subject: 'Audio message');
-    } else {
-      // Si pas de fichier, partage seulement le texte
-      await Share.share(msg.text, subject: 'Audio message');
+    if (filePath != null) {
+      final file = File(filePath);
+
+      if (await file.exists()) {
+        await Share.shareFiles([file.path],
+            text: msg.text, subject: 'Message audio partagé');
+        return;
+      }
     }
+
+    // Sinon, partage uniquement le texte
+    await Share.share(msg.text, subject: 'Message sans audio');
   }
+
+
 }
 
 
