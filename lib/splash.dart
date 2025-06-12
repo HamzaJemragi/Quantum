@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:quantum/core/constants/colors.dart';
+import 'package:quantum/view/screens/home/home_screen.dart';
 
 class CustomSplashScreen extends StatefulWidget {
   @override
@@ -16,7 +17,10 @@ class _CustomSplashScreenState extends State<CustomSplashScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(Duration(seconds: 3), () {
-        Navigator.of(context).pushReplacementNamed('/home');
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
       });
     });
   }

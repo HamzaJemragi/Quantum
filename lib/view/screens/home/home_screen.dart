@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:quantum/core/constants/colors.dart';
+import 'package:quantum/view/screens/voice_chat_screen.dart';
 
 import '../../../viewmodels/text_to_speechViewModel.dart';
 import '../../../widgets/animated_waves.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import '../../../widgets/chat_input_filed.dart';
 import '../../../widgets/drawer_widget.dart';
 import '../../../widgets/show_options.dart';
+import '../voice_chat_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -45,11 +47,20 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _onMicPressed() {
-    print("Microphone pressed");
-    // Reconnaissance vocale possible ici
+    void _onMicPressed() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => VoiceChatScreen()),
+      );
+      // Reconnaissance vocale possible ici
+    } // Reconnaissance vocale possible ici
   }
 
-  void _showAudioOptions(BuildContext context, AudioViewModel viewModel, int index) {
+  void _showAudioOptions(
+    BuildContext context,
+    AudioViewModel viewModel,
+    int index,
+  ) {
     showModalBottomSheet(
       context: context,
       builder: (ctx) => AudioOptionsMenu(viewModel: viewModel, index: index),
@@ -75,7 +86,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemCount: viewModel.audioMessages.length,
                     itemBuilder: (context, index) {
                       final msg = viewModel.audioMessages[index];
-                      final isPlaying = viewModel.playingIndex == index && viewModel.isPlaying;
+                      final isPlaying =
+                          viewModel.playingIndex == index &&
+                          viewModel.isPlaying;
 
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -85,7 +98,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               ConstrainedBox(
-                                constraints: const BoxConstraints(maxWidth: 300),
+                                constraints: const BoxConstraints(
+                                  maxWidth: 300,
+                                ),
                                 child: Card(
                                   color: Colors.grey[100],
                                   shape: RoundedRectangleBorder(
@@ -111,14 +126,22 @@ class _HomeScreenState extends State<HomeScreen> {
                               SizedBox(
                                 width: screenWidth * 0.75,
                                 child: GestureDetector(
-                                  onLongPress: () => _showAudioOptions(context, viewModel, index),
+                                  onLongPress:
+                                      () => _showAudioOptions(
+                                        context,
+                                        viewModel,
+                                        index,
+                                      ),
                                   child: Card(
                                     color: QuantumColors.whiteColor,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(60),
                                     ),
                                     child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 8,
+                                      ),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
@@ -130,7 +153,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                               size: 32,
                                               color: QuantumColors.bleuPourpre,
                                             ),
-                                            onPressed: () => viewModel.playAudio(index),
+                                            onPressed:
+                                                () =>
+                                                    viewModel.playAudio(index),
                                           ),
                                           const SizedBox(width: 8),
                                           AnimatedWaves(
@@ -153,7 +178,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
 
                 Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 8,
+                  ),
                   child: ChatInputField(
                     controller: _controller,
                     hasText: _hasText,
@@ -171,4 +199,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
