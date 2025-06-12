@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import '../core/services/tts_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -22,7 +22,6 @@ class AudioViewModel extends ChangeNotifier {
   bool get isPlaying => _isPlaying;
 
   AudioViewModel() {
-
     _flutterTts.setStartHandler(() {
       _isPlaying = true;
       notifyListeners();
@@ -46,10 +45,20 @@ class AudioViewModel extends ChangeNotifier {
     final languages = await _flutterTts.getLanguages;
     return languages.contains(languageCode);
   }
+
   Future<void> addAudioMessage(String text, String lang) async {
     if (text.trim().isEmpty) return;
 
-    final message = AudioMessage(text: text.trim(), languageCode: lang, );
+    final TtsService ttsService = TtsService();
+    final File? file = await ttsService.getTtsFile(text.trim(), lang);
+
+    final message = AudioMessage(
+      text: text.trim(),
+      languageCode: lang,
+      audioFilePath: file?.path, // <- plus d'erreur ici
+    );
+
+    // final message = AudioMessage(text: text.trim(), languageCode: lang);
     _audioMessages.add(message);
     notifyListeners();
   }
@@ -64,7 +73,6 @@ class AudioViewModel extends ChangeNotifier {
       await _flutterTts.setLanguage('fr-FR');
       final currentLanguage = await _flutterTts.getLanguages;
       print('Current TTS Language: $currentLanguage');
-
     } else {
       await _flutterTts.setLanguage(msg.languageCode);
     }
@@ -86,7 +94,6 @@ class AudioViewModel extends ChangeNotifier {
     await _flutterTts.speak(msg.text);
   }
 
-
   Future<void> pause() async {
     await _flutterTts.pause();
     _isPlaying = false;
@@ -107,7 +114,6 @@ class AudioViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-
   void downloadAudio(int index) {
     // Implémentation téléchargement
   }
@@ -123,16 +129,20 @@ class AudioViewModel extends ChangeNotifier {
     final msg = _audioMessages[index];
     final filePath = msg.audioFilePath;
 
-    if (filePath != null && File(filePath).existsSync()) {
-      // Partage du fichier audio avec texte
-      await Share.shareFiles([filePath], text: msg.text, subject: 'Audio message');
-    } else {
-      // Si pas de fichier, partage seulement le texte
-      await Share.share(msg.text, subject: 'Audio message');
+    if (filePath != null) {
+      final file = File(filePath);
+
+      if (await file.exists()) {
+        await Share.shareFiles(
+          [file.path],
+          text: msg.text,
+          subject: 'Message audio partagé',
+        );
+        return;
+      }
     }
+
+    // Sinon, partage uniquement le texte
+    await Share.share(msg.text, subject: 'Message sans audio');
   }
 }
-
-
-
-
