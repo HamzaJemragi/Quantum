@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _onMicPressed() {
-    print("Microphone pressed");
+    Navigator.of(context).pushReplacementNamed('/voice');
     // Reconnaissance vocale possible ici
   }
 
@@ -171,4 +171,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-

@@ -4,6 +4,7 @@ import 'package:quantum/splash.dart';
 import 'package:quantum/view/screens/home/home_screen.dart';
 
 import 'package:flutter/material.dart';
+import 'package:quantum/view/screens/voice_chat_screen.dart';
 import 'package:quantum/viewmodels/text_to_speechViewModel.dart';
 
 
@@ -26,9 +27,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => CustomSplashScreen(),
         '/home': (context) => HomeScreen(),
+        '/voice': (context) => VoiceChatScreen(),
       },
     );
   }
 }
-
-
