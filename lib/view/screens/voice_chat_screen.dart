@@ -73,6 +73,7 @@ class _VoiceChatScreenState extends State<VoiceChatScreen>
                 child: InkWell(
                   borderRadius: BorderRadius.circular(40),
                   onTap: () {
+                    Navigator.pop(context);
                     // Handle microphone tap
                   },
                   child: Icon(Icons.phone, color: Colors.white, size: 32),

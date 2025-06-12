@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quantum/splash.dart';
+import 'package:quantum/view/screens/home/home_screen.dart';
+
+import 'package:flutter/material.dart';
+import 'package:quantum/viewmodels/text_to_speechViewModel.dart';
+
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:quantum/view/screens/voice_chat_screen.dart';
 
 void main() {
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => AudioViewModel(),
+      child: const MyApp(),
+    ),
+  );
   runApp(MyApp());
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -17,7 +29,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: VoiceChatScreen(),
+      home: CustomSplashScreen(),
     );
   }
 }
